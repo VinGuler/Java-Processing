@@ -3,8 +3,8 @@ class Cell{
   // Cell position(x,y) on pixels, and position(row, col) on grid
   int x;
   int y;
-  int row;
   int col;
+  int row;
   
   // Bool for Cell state
   boolean alive;
@@ -14,15 +14,15 @@ class Cell{
   
   // CONSTRUCTOR
   // Recieves the Cells loction on the grid (row, col)
-  Cell(int r, int c){
+  Cell(int c, int r){
     // Calculating location on pixels (x, y) based on the grid location(row, col)
     // and the scl (Global variable for scale)
     x = c * scl;
     y = r * scl;
  
     // Setting the row and col position of the Cell 
-    row = r;
     col = c;
+    row = r;
     
     // Cell is always dead in the beggining
     alive = false;
@@ -68,41 +68,27 @@ class Cell{
 
     // Counter of aliveNeighbors for this function 
     int aliveN = 0;
+    int index;
     
     // Advancing the counter by 1 if Cell neighbor is alive
-    // Also not checking fot the edge Cells.
-    if(col-1>=0 && col+1<cols && row-1>=0 && row+1<rows){   
-      // Cell to the LEFT
-      if(grid[row-1][col].alive){
-        aliveN++;
-      }
-      // Cell to the RIGHT
-      if(grid[row+1][col].alive){
-        aliveN++;
-      }
-      // Cell to the TOP
-      if(grid[row][col-1].alive){
-        aliveN++;
-      }
-      // Cell to the BOTTOM
-      if(grid[row][col+1].alive){
-        aliveN++;
-      }
-      // Cell to the TOP LEFT
-      if(grid[row-1][col-1].alive){
-        aliveN++;
-      }
-      // Cell to the BOTTOM LEFT
-      if(grid[row-1][col+1].alive){
-        aliveN++;
-      }
-      // Cell to the TOP RIGHT
-      if(grid[row+1][col-1].alive){
-        aliveN++;
-      }
-      // Cell to the BOTTOM RIGHT
-      if(grid[row+1][col+1].alive){
-        aliveN++;
+    // Also NOT checking fot the edge Cells.
+    if(col-1>=0 && col+1<cols && row-1>=0 && row+1<rows){ 
+      /*
+        Going through the neighbors
+        (except itself, where: i & j == 0):
+        (col-1, row-1), (col  ,row-1), (col+1, row-1)
+        (col-1, row  ), This.....Cell, (col+1, row  )
+        (col-1, row+1), (col  ,row+1), (col+1, row+1)
+      */
+      for(int i = -1; i <= 1; i++){
+        for(int j = -1; j <= 1; j++){ 
+          if(!(i == 0 && j == 0)){
+            index = (col-j) + (row-i) * cols;
+            if(cells.get(index).alive){
+              aliveN++;
+            }
+          }
+        }
       }
     }
     // Setting this.numOfNeighbors to the counter

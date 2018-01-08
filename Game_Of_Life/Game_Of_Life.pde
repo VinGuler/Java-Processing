@@ -9,19 +9,14 @@
   Cell.notalive with numberOfNeighbors.alive==3
   will RESORRECT
   Create your starting patterns by clicking on gray squeres.
-  Reclicking a live Cell will kill it.
+  Reclicking a living Cell will kill it.
   
   The grid is supposed to be infinte, 
   but everything is finite in the world (except humen stupidity ;-) ),
-  and so the grd is finite.
+  and so the grid is finite.
 */
 
-// Variables for the grid
-/*
-  The grid is needed for the Cell.checkNeighbors function,
-  and also gives a structure to the 'world of Cells' 
-*/
-Cell[][] grid;
+// Variables for the grid (2D grid in 1D Array-cells)
 int rows;
 int cols;
 int scl = 10;
@@ -35,14 +30,13 @@ boolean start;
 
 void setup(){
 
-  size(1200, 800);
+  size(1000, 1000);
   // FrameRate is limited so it won't go to fast...
   frameRate(20);
   
-  // Creating the empty grid = [][] <- 2D Array
-  rows = height / scl;
+  // Calculating values for the Array (2D grid in 1D Array-cells)
+  rows = width / scl;
   cols = width / scl;
-  grid = new Cell[rows][cols];
 
   /* 
     Starting the whole cells world
@@ -87,8 +81,7 @@ void restart(){
   // Filling both the grid and the cells Array with dead Cells
   for(int row = 0; row < rows; row++){
     for(int col = 0; col < cols; col++){
-       grid[row][col] = new Cell(row, col);
-       cells.add(grid[row][col]);
+       cells.add(new Cell(col, row));
     }
   }
 }
@@ -113,12 +106,13 @@ void mousePressed(){
   // Getting mouse pos on the grid
   int x = (int)floor(mouseX/scl);
   int y = (int)floor(mouseY/scl);
+  int index = x + y * cols;
 
   // Setting selected Cells' state
-  if (!grid[y][x].alive){
-    grid[y][x].alive = true;  
+  if (!cells.get(index).alive){
+    cells.get(index).alive = true;  
   } else {
-    grid[y][x].alive = false;
+    cells.get(index).alive = false;
   }
 }
 
@@ -126,11 +120,12 @@ void mouseDragged(){
   // Getting mouse pos on the grid
   int x = (int)floor(mouseX/scl);
   int y = (int)floor(mouseY/scl);
-
+  int index = x + y * cols;
+  
   // Setting selected Cells' state
-  if (!grid[y][x].alive){
-    grid[y][x].alive = true;  
+  if (!cells.get(index).alive){
+    cells.get(index).alive = true;  
   } else {
-    grid[y][x].alive = false;
+    cells.get(index).alive = false;
   }
 }
